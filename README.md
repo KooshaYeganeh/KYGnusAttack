@@ -1,2 +1,2 @@
 # KYGnus_Pentst
-Pentest witrh my Favorite Tools
+Pentest with my Favorite Tools
