@@ -30,6 +30,20 @@ nikto(){
 }
 
 
+
+
+loadbalancer(){
+	echo "Try to Detect LoadBalancer in Server"
+	lbd www.realsepta.ir
+}
+
+webapp_firewall(){
+	echo "Try to find WAF in Server ..."
+	wafw00f www.realsepta.ir
+}
+
+
+
 nmap(){
 	echo "Start Scan Server ports ..."
 	ip=`nslookup realsepta.ir | grep Address | tail -1 | awk '{print $2}'`
@@ -37,20 +51,9 @@ nmap(){
 
 }
 
-loadbalancer(){
-	echo "Try to Detect LoadBalancer in Server"
-	lbd www.realsepta.ir
-}
 
-webapp_firrewall(){
-	echo "Try to find WAF in Server ..."
-	wafw00f www.realsepta.ir
-}
-
-
-
-
-
-
-
-
+dirb
+nikto 
+loadbalancer
+webapp_firewall
+nmap
