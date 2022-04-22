@@ -1,0 +1,188 @@
+import os
+from colorama import init, Fore, Back, Style
+import sys
+import time
+from time import sleep
+
+
+
+
+
+green = (Fore.LIGHTCYAN_EX)
+red = (Fore.RED)
+white = Fore.WHITE
+
+
+appdir = os.path.join(f"/usr/share/KYGnusAttack")
+os.makedirs(appdir,exist_ok=True)
+
+
+
+def logo():
+    logo=(red + """
+██╗  ██╗██╗   ██╗ ██████╗ ███╗   ██╗██╗   ██╗███████╗ █████╗ ████████╗████████╗ █████╗  ██████╗██╗  ██╗
+██║ ██╔╝╚██╗ ██╔╝██╔════╝ ████╗  ██║██║   ██║██╔════╝██╔══██╗╚══██╔══╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
+█████╔╝  ╚████╔╝ ██║  ███╗██╔██╗ ██║██║   ██║███████╗███████║   ██║      ██║   ███████║██║     █████╔╝ 
+██╔═██╗   ╚██╔╝  ██║   ██║██║╚██╗██║██║   ██║╚════██║██╔══██║   ██║      ██║   ██╔══██║██║     ██╔═██╗ 
+██║  ██╗   ██║   ╚██████╔╝██║ ╚████║╚██████╔╝███████║██║  ██║   ██║      ██║   ██║  ██║╚██████╗██║  ██╗
+╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝""")
+
+    return logo
+
+
+def menu():
+    print(white + "choose what you want?")
+    print(white + "1.WebApplication Attack")
+    print(white + "2.Host Attack")
+    print(white + "3.Exit")
+    return ""
+
+
+
+def dirb():
+    with open("/usr/share/KYGnusAttack/Result.txt","w") as f:
+        dirb_command = os.popen(f"dirb http://{url} -r -z 1000").read()
+        f.write("================================================ DirB =================================================\n")
+        f.write(f"DirB OutPut is : \n {dirb_command}")
+        f.close()
+        return (green + "Drib scan [ OK ]")
+
+
+
+def skipfish():
+    with open ("/usr/share/KYGnusAttack/Result.txt" , "a") as f:
+        skipcommand = os.popen(f"skipfish -o 202 http://{url}").read()
+        f.write("=============================================== SkipFish ==============================================\n")
+        f.write(f"skipfish result is : \n {skipcommand}")
+        f.close()
+        return (green + "Skipfish Scan [ OK ]")
+
+
+
+def wapiti():
+    with open("/usr/share/KYGnusAttack/Result.txt" , "a") as f:
+        f.write("============================================== wapiti ==================================================\n")
+
+        default_scan =  os.popen(f"wapiti --url http://{url} -t 60").read()
+        target_url =  os.popen(f"wapiti --url http://{url} -v 1").read()
+        every_attack =  os.popen(f"wapiti --url http://{url} -v 2").read()
+        f.write(default_scan)
+        f.write(target_url)
+        f.write(every_attack)
+        f.close()
+        return (green + "wapiti scan [ OK ]")
+
+
+
+def nikto():
+    with open("/usr/share/KYGnusAttack/Result.txt" , "a") as f:
+        f.write("============================================== Nikto ====================================================\n")
+        """ This show cookies and response 200 """
+        cookies = os.popen(f"nikto -host {url} -Display 23V").read()
+        sql_injection = os.popen(f"nikto -host {url} -Tuning 9").read()
+        """ Show Interesting Files and misconfigurations and Information Disclosure and Injection(XSS?script/HTML)"""
+        intersting  = os.popen(f"nikto -host {url} -Tuning 1234").read()
+        f.write(cookies)
+        f.write(sql_injection)
+        f.write(interesting)
+        f.close()
+        return (green + "Nikto Scan in [ OK ]")
+
+
+
+
+def loadbalancer():
+    "ry to Detect LoadBalancer in Server"
+    with open("/usr/share/KYGnusAttack/Result.txt","a") as f:
+        f.write("============================================== lbd =======================================================\n")
+        lbd = os.popen(f"lbd {url}").read()
+        f.write(lbd)
+        f.close()
+        return (green + "LoadBalancer scan is  [ OK ]")
+
+
+def webapp_firewall():
+    "Try to find WAF in Server ..."
+    with open("/usr/share/KYGnusAttack/Result.txt" , "a") as f:
+        f.write("============================================ WafW00f =======================================================")
+        waf = os.popen(f"wafw00f {url}").read()
+        f.write(waf)
+        f.close()
+        return (green  + "Webapp Firewall scan is [ OK ]")
+
+
+
+# HOST
+
+
+def nmap():
+    "Start Scan Server for open ports and Services"
+    with open("/usr/share/KYGnusAttack/Result.txt" , "a")  as f:
+        f.write("============================================ Nmap ===========================================================")
+        ip = os.popen(f"nslookup {url} | tail -2 | head -1 | cut -d':' -f2 | cut -d ' ' -f2").read()
+        nmap_pn = os.popen(f"nmap -Pn {ip}").read()
+        nmap_sweep_network = os.popen(f"nmap -sn {ip}/24").read()
+        f.write(ip)
+        f.close()
+        return (green  + "port Scaning [ OK ]")
+
+
+def hping():
+    with open("/usr/share/KYGnusAttack/Result.txt" , "a") as f:
+        detect_stateful_firewall  = os.popen(f"hping3 -A {url} -p 80").read()
+        if detect_stateful_firewall:
+            f.write("No Firewall Detected [ OK ]")
+            return (green + "No Firewall Detected [ OK ]")
+        else:
+            f.write("That's might be have Firewall block out action [ ERROR ]")
+            return (red + "That's might be have Firewall block out action [ ERROR ]")
+        f.close()
+
+def hping_flood():
+    flood = os.popen(f"hping3 -V --flood -S -P 80 {url}").read()
+    return flood
+
+
+if __name__ == "__main__":
+    menu_choice = 0
+    print(logo())
+    print(menu())
+
+    while menu_choice != 3:
+        print("Type in your choice:")
+        while True:
+            try:
+                menu_choice = int(input('> '))
+            except ValueError:
+                pass
+            if (menu_choice > 0 or menu_choice < 3):
+                break
+        if menu_choice == 1:
+            print(dirb())
+            print(skipfish())
+            print(wapiti())
+            print(nikto())
+            print(loadbalancer())
+            print(webapp_firewall())
+        elif menu_choice == 2:
+            print(nmap())
+            print(hping())
+            print(hping_flood())
+
+        elif menu_choice == 3:
+            print("Exiting from KYGnusAttack")
+            sys.exit(0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
