@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import os
 from colorama import init, Fore, Back, Style
 import sys
